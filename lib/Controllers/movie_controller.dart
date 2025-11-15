@@ -11,7 +11,6 @@ class MovieController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // Don't auto-fetch - will be called explicitly from splash screen
   }
 
   Future<void> fetchPopularMovies() async {

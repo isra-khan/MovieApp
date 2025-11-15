@@ -4,7 +4,7 @@ import '../Model/model.dart';
 
 class MovieService {
   static const String baseUrl = 'https://api.themoviedb.org/3';
-  // Replace with your actual API key
+
   static const String apiKey = 'def20fb2097f69cafc125b97feb44723';
   static const String imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
 

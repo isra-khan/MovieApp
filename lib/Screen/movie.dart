@@ -11,8 +11,6 @@ class MovieDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get the controller (should already exist from splash screen)
-    // Use Get.put as fallback if not found (shouldn't happen)
     final MovieController controller = Get.put(
       MovieController(),
       permanent: true,
@@ -20,8 +18,6 @@ class MovieDisplay extends StatelessWidget {
     final Size size = MediaQuery.of(context).size;
 
     return Obx(() {
-      // Don't show loading screen if we're coming from splash (movies should be loaded)
-      // Only show loading as fallback if someone navigates directly without splash
       if (controller.isLoading.value &&
           controller.movieItems.isEmpty &&
           controller.errorMessage.value.isEmpty) {
@@ -68,7 +64,6 @@ class MovieDisplay extends StatelessWidget {
           height: size.height,
           child: Stack(
             children: [
-              // For background image - only rebuilds when current index changes
               Obx(() {
                 final currentImage = controller.movieItems.isNotEmpty
                     ? controller.movieItems[controller.currentIndex.value].image
@@ -202,7 +197,7 @@ class MovieDisplay extends StatelessWidget {
                                         duration: const Duration(
                                           milliseconds: 1000,
                                         ),
-                                        // text is shown 1000 milliseconds later after scroll
+
                                         opacity:
                                             controller.currentIndex.value ==
                                                 index
