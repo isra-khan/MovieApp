@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'Screen/splash_screen.dart';
 import 'Screen/movie.dart';
 import 'Screen/detail_screen.dart';
 
@@ -16,10 +17,22 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      initialRoute: '/splash',
       getPages: [
-        GetPage(name: '/', page: () => const MovieDisplay()),
-        GetPage(name: '/detail', page: () => const DetailScreen()),
+        GetPage(
+          name: '/splash',
+          page: () => const SplashScreen(),
+        ),
+        GetPage(
+          name: '/',
+          page: () => const MovieDisplay(),
+          transition: Transition.fadeIn,
+          transitionDuration: const Duration(milliseconds: 600),
+        ),
+        GetPage(
+          name: '/detail',
+          page: () => const DetailScreen(),
+        ),
       ],
     );
   }

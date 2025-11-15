@@ -1,7 +1,7 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../Controllers/detail_controller.dart';
 import '../Model/model.dart' show time, colors;
 
@@ -15,9 +15,17 @@ class DetailScreen extends StatelessWidget {
 
     return Obx(() {
       if (controller.isLoading.value) {
-        return const Scaffold(
-          backgroundColor: Colors.white,
-          body: Center(child: CircularProgressIndicator()),
+        return Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Container(
+            color: Colors.black.withOpacity(0.3),
+            child: Center(
+              child: LoadingAnimationWidget.staggeredDotsWave(
+                color: Colors.white,
+                size: 100,
+              ),
+            ),
+          ),
         );
       }
 

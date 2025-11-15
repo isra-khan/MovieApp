@@ -21,7 +21,6 @@ class Movie {
     this.overview,
   });
 
-  // Factory constructor to parse TMDB popular movies JSON
   factory Movie.fromTmdbJson(Map<String, dynamic> json) {
     return Movie(
       id: json['id'] ?? 0,
@@ -42,7 +41,6 @@ class Movie {
     );
   }
 
-  // Factory constructor to parse TMDB movie details JSON
   factory Movie.fromTmdbDetailJson(Map<String, dynamic> json) {
     // Format runtime as duration
     String formatDuration(int? runtime) {

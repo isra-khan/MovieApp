@@ -2,21 +2,38 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../Controllers/movie_controller.dart';
 import '../Model/model.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class MovieDisplay extends StatelessWidget {
   const MovieDisplay({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final MovieController controller = Get.put(MovieController());
+    // Get the controller (should already exist from splash screen)
+    // Use Get.put as fallback if not found (shouldn't happen)
+    final MovieController controller = Get.put(
+      MovieController(),
+      permanent: true,
+    );
     final Size size = MediaQuery.of(context).size;
 
     return Obx(() {
-      if (controller.isLoading.value) {
-        return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      // Don't show loading screen if we're coming from splash (movies should be loaded)
+      // Only show loading as fallback if someone navigates directly without splash
+      if (controller.isLoading.value &&
+          controller.movieItems.isEmpty &&
+          controller.errorMessage.value.isEmpty) {
+        return Scaffold(
+          backgroundColor: Colors.black,
+          body: Center(
+            child: LoadingAnimationWidget.staggeredDotsWave(
+              color: Colors.white,
+              size: 100,
+            ),
+          ),
+        );
       }
 
       if (controller.errorMessage.value.isNotEmpty) {
@@ -46,23 +63,39 @@ class MovieDisplay extends StatelessWidget {
       }
 
       return Scaffold(
+        backgroundColor: Colors.black,
         body: SizedBox(
           height: size.height,
           child: Stack(
             children: [
-              // For background image
-              Obx(
-                () => Image.network(
-                  controller.movieItems[controller.currentIndex.value].image,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: Colors.grey[300],
-                      child: const Center(child: Icon(Icons.error, size: 50)),
-                    );
-                  },
-                ),
-              ),
+              // For background image - only rebuilds when current index changes
+              Obx(() {
+                final currentImage = controller.movieItems.isNotEmpty
+                    ? controller.movieItems[controller.currentIndex.value].image
+                    : '';
+
+                if (currentImage.isEmpty) {
+                  return Container(color: Colors.black);
+                }
+
+                return AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 400),
+                  child: Image.network(
+                    currentImage,
+                    key: ValueKey(currentImage),
+                    fit: BoxFit.cover,
+                    filterQuality: FilterQuality.medium,
+                    cacheWidth: 600,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(color: Colors.black);
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(color: Colors.grey[900]);
+                    },
+                  ),
+                );
+              }),
               Positioned(
                 top: 0,
                 left: 0,
